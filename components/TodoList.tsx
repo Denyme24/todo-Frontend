@@ -7,7 +7,7 @@ import TodoItem from './TodoItem'
 
 interface Todo {
   id: number
-  text: string
+  body: string
   completed: boolean
 }
 
@@ -15,12 +15,30 @@ export default function TodoList() {
   const [todos, setTodos] = useState<Todo[]>([])
   const [newTodo, setNewTodo] = useState('')
 
-  const addTodo = () => {
+  const addTodo = async () => {
     if (newTodo.trim()) {
-      setTodos([...todos, { id: Date.now(), text: newTodo.trim(), completed: false }])
-      setNewTodo('')
+      try {
+        const response = await fetch('http://127.0.0.1:8000/todos', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ body: newTodo.trim(), completed: false }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to add todo');
+        }
+
+        const todo = await response.json();
+        console.log("This is the response from the backend : ",todo)
+        setTodos([...todos, todo]);
+        setNewTodo('');
+      } catch (error) {
+        console.error(error);
+      }
     }
-  }
+  };
 
   const toggleTodo = (id: number) => {
     setTodos(todos.map(todo =>

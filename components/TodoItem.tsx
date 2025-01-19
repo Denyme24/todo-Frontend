@@ -9,7 +9,7 @@ import { Trash2, Edit2 } from 'lucide-react'
 
 interface Todo {
     id: number
-    text: string
+    body: string
     completed: boolean
 }
 
@@ -22,7 +22,7 @@ interface TodoItemProps {
 
 export default function TodoItem({ todo, onToggle, onDelete, onEdit }: TodoItemProps) {
     const [isEditing, setIsEditing] = useState(false)
-    const [editedText, setEditedText] = useState(todo.text)
+    const [editedText, setEditedText] = useState(todo.body)
 
     const handleEdit = () => {
         onEdit(editedText)
@@ -40,7 +40,7 @@ export default function TodoItem({ todo, onToggle, onDelete, onEdit }: TodoItemP
                 htmlFor={`todo-${todo.id}`}
                 className={`flex-grow ${todo.completed ? 'line-through text-gray-500' : 'text-gray-800'}`}
             >
-                {todo.text}
+                {todo.body}
             </label>
             <Button
                 variant="ghost"
